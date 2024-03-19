@@ -16,7 +16,7 @@ public class QuestionService {
     @Autowired
     private final QuestionDao questionDao;
 
-    public QuestionService(QuestionDao questionDao) {
+    public QuestionService(QuestionDao questionDao) { // Constructor Injection
         this.questionDao = questionDao;
     }
 

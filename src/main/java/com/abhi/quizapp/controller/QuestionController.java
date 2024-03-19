@@ -15,7 +15,7 @@ public class QuestionController {
     @Autowired
     private final QuestionService questionService;
 
-    public QuestionController(QuestionService questionService) {
+    public QuestionController(QuestionService questionService) { // Constructor Injection
         this.questionService = questionService;
     }
 
