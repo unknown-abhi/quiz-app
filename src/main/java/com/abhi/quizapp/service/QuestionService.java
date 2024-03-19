@@ -3,6 +3,7 @@ package com.abhi.quizapp.service;
 import com.abhi.quizapp.dao.QuestionDao;
 import com.abhi.quizapp.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,17 +21,36 @@ public class QuestionService {
         this.questionDao = questionDao;
     }
 
-    public List<Question> getAllQuestions() {
-        return questionDao.findAll();
+    public ResponseEntity<List<?>> getAllQuestions() {
+        try {
+            List<Question> questions = questionDao.findAll();
+            return new ResponseEntity<>(questions, HttpStatus.OK);
+        } catch (DataAccessException e) {
+            // Log the exception or handle it appropriately
+            return new ResponseEntity<>(List.of("Error occurred while fetching all questions"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    public List<Question> getQuestionsByCategory(String category) {
-        return questionDao.findByCategory(category);
+    public ResponseEntity<List<?>> getQuestionsByCategory(String category) {
+        try {
+            List<Question> questions = questionDao.findByCategory(category);
+            return new ResponseEntity<>(questions, HttpStatus.OK);
+        } catch (DataAccessException e) {
+            // Log the exception or handle it appropriately
+            return new ResponseEntity<>(List.of("Error occurred while fetching questions by category"), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    public Question addQuestion(Question question) {
-        return questionDao.save(question);
+    public ResponseEntity<?> addQuestion(Question question) {
+        try {
+            Question savedQuestion = questionDao.save(question);
+            return new ResponseEntity<>(savedQuestion, HttpStatus.CREATED);
+        } catch (DataAccessException e) {
+            // Log the exception or handle it appropriately
+            return new ResponseEntity<>("Error occurred while adding a new question", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 
     public ResponseEntity<String> deleteQuestion(int id) {
         Optional<Question> questionOptional = questionDao.findById(id);
